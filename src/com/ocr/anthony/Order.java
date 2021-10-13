@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class Order {
     public Scanner sc = new Scanner(System.in);
+    public String orderSummary = "";
+
     /**
      * Display all available menus in the restaurant.
      */
@@ -39,10 +41,12 @@ public class Order {
     }
     /**
      * Display a a question about menu, get response and display it
+     * @return menu number
      */
-    public void askMenu() {
+    public int askMenu() {
         String[] menus = {"poulet", "boeuf", "végétarien"};
-        Interaction.askSomething("menu", menus);
+        return this.askSomething("menu", menus);
+
     }
 
     /**
@@ -52,10 +56,10 @@ public class Order {
     public void askSide(boolean allSideEnable) {
         if (allSideEnable){
             String[] sides = {"légumes frais", "frites", "riz"};
-            Interaction.askSomething("accompagnement", sides);
+            this.askSomething("accompagnement", sides);
         }else{
             String[] sides = {"riz", "pas de riz"};
-            Interaction.askSomething("accompagnement", sides);
+            this.askSomething("accompagnement", sides);
         }
 
     }
@@ -65,7 +69,7 @@ public class Order {
      */
     public void askDrink() {
         String[] drinks = {"eau plate", "eau gazeuse", "soda"};
-        Interaction.askSomething("boisson", drinks);
+        this.askSomething("boisson", drinks);
     }
 
     /**
@@ -73,31 +77,67 @@ public class Order {
      */
     public void runMenu() {
 
-       int nbMenu;
-       do{
-            this.displayAvailableMenu();
-            nbMenu = sc.nextInt();
-            this.displaySelectedMenu(nbMenu);
-            switch (nbMenu) {
-                case 1:
-                    askSide(true);
-                    askDrink();
-                    break;
-                case 2:
-                    askSide(true);
-                    break;
-                case 3:
-                    askSide(false);
-                    askDrink();
-                    break;
-            }
-        }  while (nbMenu <1  || nbMenu > 3);
+       int nbMenu = this.askMenu();
+        switch (nbMenu) {
+            case 1:
+                askSide(true);
+                askDrink();
+                break;
+            case 2:
+                askSide(true);
+                break;
+            case 3:
+                askSide(false);
+                askDrink();
+                break;
+        }
     }
     public void runMenus() {
         System.out.println("Combien souhaitez vous commander de menu ?");
+        this.orderSummary = "Résumé de votre commande :%n";
         int menuQuantity = sc.nextInt();
         for (int i = 0; i<menuQuantity; i++){
-            runMenu();
+            this.orderSummary += "Menu " + (i + 1 + ":%n");
+            this.runMenu();
         }
+        System.out.println("");
+        System.out.println(String.format(this.orderSummary));
+
+    }
+    /**
+     * Ask question to user and send a reponse
+     * @param category is the question
+     * @param responses is the possible reponse
+     * @return response number
+     */
+
+    public int askSomething(String category, String[] responses) {
+        int nbResponse;
+        boolean responseIsGood;
+        do {
+            System.out.println("choix " + category);
+            for (int i = 1; i <= responses.length; i++){
+                System.out.println(i + " - " + responses[i-1]);
+            }
+            System.out.println("Que souhaitez vous comme " + category + "?");
+
+            nbResponse = sc.nextInt();
+            responseIsGood = (nbResponse > 0 && nbResponse <= responses.length);
+
+            if (responseIsGood){
+                String choice = "Vous avez choisi comme " +  category + " : " + responses[nbResponse - 1];
+                this.orderSummary += choice + "%n";
+                System.out.println(choice);
+            }else{
+                boolean isVowel = "aeiouy".contains(Character.toString(category.charAt(0)));
+                if (isVowel) {
+                    System.out.println("Vous n'avez pas choisi d'" + category + " parmi les choix proposés");
+                }else{
+                    System.out.println("Vous n'avez pas choisi de " + category + " parmi les choix proposés");
+                }
+            }
+
+        }while(!responseIsGood);
+        return nbResponse;
     }
 }
