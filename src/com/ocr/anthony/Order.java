@@ -16,6 +16,20 @@ public class Order {
      * @param nbMenu The selected menu.
      */
     public void displaySelectedMenu(int nbMenu) {
-        System.out.println("Vous avez choisi le menu " + nbMenu );
+        switch (nbMenu){
+            case 1:
+                System.out.println("Vous avez choisi le menu : poulet");
+                break;
+            case 2:
+                System.out.println("Vous avez choisi le menu : boeuf");
+                break;
+            case 3:
+                System.out.println("Vous avez choisi le menu : végétarien");
+                break;
+            default:
+                System.out.println("Vous n'avez pas choisi de menu parmi les choix proposés");
+                break;
+        }
+
     }
 }
