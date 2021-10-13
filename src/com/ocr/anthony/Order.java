@@ -138,45 +138,15 @@ public class Order {
             this.displaySelectedMenu(nbMenu);
             switch (nbMenu) {
                 case 1:
-                    int nbSide;
-                    int nbDrink;
-
-                    do{
-                        this.displayAvailableSide(true);
-                        nbSide = sc.nextInt();
-                        this.displaySelectedSide(nbSide, true);
-                    } while (nbSide < 1 || nbSide > 3);
-
-                    do {
-                        this.displayAvailableDrink();
-                        nbDrink = sc.nextInt();
-                        this.displaySelectedDrink(nbDrink);
-                    } while (nbDrink < 1 || nbDrink > 3);
-
+                    askSide(true);
+                    askDrink();
                     break;
-
                 case 2:
-
-                    do {
-                        this.displayAvailableSide(true);
-                        nbSide = sc.nextInt();
-                        this.displaySelectedSide(nbSide, true);
-                    } while (nbSide < 1 || nbSide > 3);
+                    askSide(true);
                     break;
-
                 case 3:
-
-                    do {
-                        this.displayAvailableSide(false);
-                        nbSide = sc.nextInt();
-                        this.displaySelectedSide(nbSide, false);
-                    } while (nbSide < 1 || nbSide > 2);
-
-                    do {
-                        this.displayAvailableDrink();
-                        nbDrink = sc.nextInt();
-                        this.displaySelectedDrink(nbDrink);
-                    }while (nbDrink < 1 || nbDrink > 3);
+                    askSide(false);
+                    askDrink();
                     break;
             }
         }  while (nbMenu <1  || nbMenu > 3);
@@ -187,5 +157,69 @@ public class Order {
         for (int i = 0; i<menuQuantity; i++){
             runMenu();
         }
+    }
+
+    /**
+     * Ask question to user and send a reponse
+     * @param category is the question
+     * @param responses is the possible reponse
+     */
+    public void askSomething(String category, String[] responses) {
+
+        int nbResponse;
+        boolean responseIsGood;
+        do {
+            System.out.println("choix " + category);
+            for (int i = 1; i <= responses.length; i++){
+                System.out.println(i + " - " + responses[i-1]);
+            }
+            System.out.println("Que souhaitez vous comme " + category + "?");
+            nbResponse = sc.nextInt();
+            if (nbResponse > 0 && nbResponse <= responses.length){
+                responseIsGood = true;
+                System.out.println("Vous avez choisi comme " +  category + " : " + responses[nbResponse - 1]);
+
+            }else{
+                responseIsGood = false;
+                boolean isVowel = "aeiouy".contains(Character.toString(category.charAt(0)));
+                if (isVowel) {
+                    System.out.println("Vous n'avez pas choisi d'" + category + " parmi les choix proposés");
+                }else{
+                    System.out.println("Vous n'avez pas choisi de " + category + " parmi les choix proposés");
+                }
+            }
+
+        }while(!responseIsGood);
+    }
+
+    /**
+     * Display a a question about menu, get response and display it
+     */
+    public void askMenu() {
+        String[] menus = {"poulet", "boeuf", "végétarien"};
+        this.askSomething("menu", menus);
+    }
+
+    /**
+     * Display a a question about sides, get response and display ii
+     * @param allSideEnable enable display for all sides or not
+     */
+    public void askSide(boolean allSideEnable) {
+        if (allSideEnable){
+            String[] sides = {"légumes frais", "frites", "riz"};
+            askSomething("accompagnement", sides);
+        }else{
+            String[] sides = {"riz", "pas de riz"};
+            askSomething("accompagnement", sides);
+        }
+
+    }
+
+    /**
+     * Display a a question about Drinks, get response and display it
+     */
+    public void askDrink() {
+        String[] drinks = {"eau plate", "eau gazeuse", "soda"};
+        askSomething("boisson", drinks);
     }
 }
